@@ -77,8 +77,8 @@ function createApp() {
         let p_title = post.title;
         let p_description = post.description;
 
-        fs.writeFile(`response/${p_title}`, p_description, 'utf8', (err) => {
-          response.writeHead(302, {Location: `/?id=${p_title}`});
+        fs.writeFile(`data/${p_title}`, p_description, 'utf8', (err) => {
+          response.writeHead(302, {'Location': `/?id=${p_title}`});
           response.end();
         });
       });
