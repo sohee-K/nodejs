@@ -3,37 +3,37 @@ const fs = require('fs');
 const url = require('url');
 const qs = require('querystring');
 
-function createForm() {
-  return `<form action="http://localhost:3000/create_process" method="post">
-    <p><input type=text name="title" placeholder="title"></p>
-    <p><textarea name="description" placeholder="description"></textarea></p>
-    <p><input type="submit"></p>
-  </form>`;
-}
-
-function createTemplate(title, dataList, body) {
-  return `<!doctype html>
-    <html>
-    <head>
-      <title>WEB1 - ${title}</title>
-      <meta charset="utf-8">
-    </head>
-    <body>
-      <h1><a href="/">WEB</a></h1>
-      ${dataList}
-      <a href="/create">Create Form</a>
-      ${body}
-    </body>
-    </html>`;
-}
-
-function createList(fileList) {
-  let dataList = `<ul>`;
-        for (let i = 0; i < fileList.length; i++) {
-          dataList += `<li><a href="/?id=${fileList[i]}">${fileList[i]}</a></li>`;
-        }
-        dataList += `</ul>`;
-  return dataList;
+const template = {
+  HTML : function(title, dataList, body) {
+    return `<!doctype html>
+      <html>
+      <head>
+        <title>WEB1 - ${title}</title>
+        <meta charset="utf-8">
+      </head>
+      <body>
+        <h1><a href="/">WEB</a></h1>
+        ${dataList}
+        <a href="/create">Create Form</a>
+        ${body}
+      </body>
+      </html>`;
+  },
+  list : function(fileList) {
+    let dataList = `<ul>`;
+          for (let i = 0; i < fileList.length; i++) {
+            dataList += `<li><a href="/?id=${fileList[i]}">${fileList[i]}</a></li>`;
+          }
+          dataList += `</ul>`;
+    return dataList;
+  },
+  form : function() {
+    return `<form action="http://localhost:3000/create_process" method="post">
+      <p><input type=text name="title" placeholder="title"></p>
+      <p><textarea name="description" placeholder="description"></textarea></p>
+      <p><input type="submit"></p>
+    </form>`;
+  }
 }
 
 function createApp() {
@@ -43,7 +43,7 @@ function createApp() {
     let pathname = url.parse(_url, true).pathname;
     let title = queryData.id;
 
-    if (pathname === '/') { // 정상적으로 작동하는 페이지
+    if (pathname === '/') {  // 정상적으로 작동하는 페이지
       fs.readFile(`data/${title}`, 'utf8', (err, description) => {
         if (title === undefined) {  // index 페이지일 경우
           title = 'Welcome';
@@ -51,23 +51,23 @@ function createApp() {
         }
 
         fs.readdir('data', 'utf8', (err, fileList) => {
-          let dataList = createList(fileList);
-          let template = createTemplate(title, dataList, `<h2>${title}</h2>${description}`);
+          let dataList = template.list(fileList);
+          let html = template.HTML(title, dataList, `<h2>${title}</h2>${description}`);
 
           response.writeHead(200);
-          response.end(template);
+          response.end(html);
         });
       });
-    } else if (pathname === '/create') {
+    } else if (pathname === '/create') {  // create form
       title = 'Web1 - Create';
       fs.readdir('data', 'utf8', (err, fileList) => {
-        let dataList = createList(fileList);
-        let template = createTemplate(title, dataList, createForm());
+        let dataList = template.list(fileList);
+        let html = template.HTML(title, dataList, template.form());
 
         response.writeHead(200);
-        response.end(template);
+        response.end(html);
       });
-    } else if (pathname === '/create_process') {
+    } else if (pathname === '/create_process') {  // create process
       let body = '';
       request.on('data', function (data) {
         body += data;
