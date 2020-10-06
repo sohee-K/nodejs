@@ -51,11 +51,11 @@ function createApp() {
         });
       });
     } else {  // 오류 페이지
-      response.writeHead(404);
+      response.writeHead(404, { 'Content-Type' : 'text/plain'});
       response.end('Not Found');
     }    
   });
-  app.listen(3000);
+  app.listen(3000, '127.0.0.1');
 }
 
 function init() {
