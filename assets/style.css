@@ -1,0 +1,16 @@
+body {
+    background-color: skyblue;
+    color: white;
+    font-size: medium;
+    text-align: center;
+    margin-top: 50px;
+}
+ul {
+    width: 100px;
+    margin-left: auto; margin-right: auto;
+}
+nav ul {
+    list-style: none;
+    margin: auto;
+    padding: 0;
+}

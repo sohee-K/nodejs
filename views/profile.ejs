@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/style.css" type="text/css"/>
+    <title>Profile</title>
+</head>
+<body>
+    <%- include('partials/nav.ejs'); %>
+    <h1>Profile Page</h1>
+    <p>Name : <%= person.name %></p>
+    <p>Age : <%= person.age %></p>
+    <p>Job : <%= person.job %></p>
+    <ul>Hobbies : <% person.hobbies.forEach( (hobby) => { %>
+        <li><%= hobby %></li>
+    <% }); %></ul>
+</body>
+</html>
